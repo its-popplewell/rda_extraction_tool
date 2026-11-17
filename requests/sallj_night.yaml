@@ -1,0 +1,26 @@
+dataset: era5                  # era5 | era20c
+
+domain:
+  north:  15.0
+  south: -50.0
+  west:  -85.0
+  east:  -30.0
+
+time:
+  start: 1979-11-01            # nights are named by the date they start on
+  end:   2022-03-31
+  months: [11, 12, 1, 2, 3]
+
+hours: [23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]   # omit for all 24
+
+variables: [u, v]
+levels:
+  values: [850]
+
+layouts:
+  julia:  "{dataset}_{var}.nc"             # one merged file per variable
+  per_day:
+    path: "{yyyymm}/era5_{yyyymmdd}.nc"    # all variables in one file per day
+    format: nc4
+    compress: true
+  raw: "{var}/{yyyymmdd}.nc"               # the pieces as they are

@@ -1,0 +1,27 @@
+dataset: era5
+
+# Northern pocket plus margin: the Llanos bend, with room to move the box
+# edges, and the southern exit boundary down through eastern Peru.
+domain:
+  north:  12.5
+  south: -12.5
+  west:  -81.75
+  east:  -55.0
+
+time:
+  start: 2012-11-01
+  end:   2012-11-30
+  months: [11, 12, 1, 2, 3]
+
+hours: [23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# u, v for the face fluxes; w is ERA5's omega (Pa/s) for the lid.
+variables: [u, v, w]
+
+# Every native level from the surface up to 600 hPa, so the vertical
+# integral is well sampled near the ground and the lid can sit at 700 or 600.
+levels:
+  values: [1000, 975, 950, 925, 900, 875, 850, 825, 800, 775, 750, 700, 650, 600]
+
+layouts:
+  julia: "{dataset}_{var}.nc"

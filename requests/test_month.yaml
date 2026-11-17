@@ -1,0 +1,14 @@
+dataset: era5
+domain: {north: 15.0, south: -50.0, west: -85.0, east: -30.0}
+time:   {start: 1979-11-01, end: 1979-11-03}
+hours:  [23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+variables: [u, v]
+levels: {values: [850, 700]}
+layouts:
+  raw: "{var}/{yyyymmdd}.nc"
+  per_var: "{dataset}_{var}.nc"
+  per_day:
+    path: "{yyyymm}/era5_{yyyymmdd}.nc"
+    lon180: true
+    lat_ascending: true
+    rename: {U: u, V: v}

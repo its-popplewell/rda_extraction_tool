@@ -1,0 +1,22 @@
+dataset: era5
+
+domain:                        # Jones 2023 LLJ domain
+  north:  12.5
+  south: -30.0
+  west:  -81.75
+  east:  -55.0
+
+time:
+  start: 1979-11-01            # same span as sallj_night, so nights line up with your type labels
+  end:   2022-03-31
+  months: [11, 12, 1, 2, 3]
+
+hours: [23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+variables: [u, v]
+
+levels:
+  values: [800, 750, 500]
+
+layouts:
+  julia: "{dataset}_{var}.nc"  # one merged file per variable, for the plot script

@@ -1,0 +1,19 @@
+dataset: mesaclip_rcp_005
+
+domain:
+  north:  12.5
+  south: -30.0
+  west:  -81.75
+  east:  -55.0
+
+time:
+  start: 2006-01-01
+  end:   2022-03-31
+  months: [11, 12, 1, 2, 3]
+
+hours: [23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+variables: [u850, v850, u700, v700, u500, v500]
+
+layouts:
+  julia: "{dataset}_{var}.nc"
