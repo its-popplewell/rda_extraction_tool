@@ -1,0 +1,22 @@
+cdo = "cdo"
+
+[defaults]
+jobs = 8
+merge_group = 200
+box = "stations"
+
+[archives]
+era20c = "/glade/campaign/collections/rda/data/d626000"
+era5   = "/glade/campaign/collections/rda/data/d633000"
+mesaclip_hist = "/glade/campaign/collections/rda/data/d651007"
+mesaclip_proj = "/glade/campaign/collections/rda/data/d651009"
+
+[boxes]
+stations = "-67,-56,-26,-13"
+sesa     = "-60.77,-48.40,-33.22,-22.06"
+
+[layouts]
+rda_decade = ["{root}/{stream}/{decade0}_{decade9}",
+              "{root}/{stream}/{year}_{year}"]
+rda_month  = ["{root}/{stream}/{year}{month}"]
+cesm_case  = ["{root}/{case}/atm/proc/tseries/{stream}"]

@@ -1,0 +1,1609 @@
+# One entry per variable, named <dataset>_<variable>: a request with
+# dataset: era5 and variables: [u, v] uses era5_u and era5_v.
+#
+# file_pattern: a Go regexp matched against file names. It needs a key group
+# (unique per file; it names the piece) and a year group, plus month and day
+# groups when the file covers less than a year.
+#
+# ops: cdo operators. cdo applies a chain right to left, so the box goes last
+# here and is cut first. {box}, {hours} and {levels} are filled from the request;
+# a request that sets hours or levels the entry has no op for is refused.
+
+# ---- ERA5 pressure levels, hourly, one file per day (RDA d633000) ----
+
+[datasets.era5_u]
+description = "ERA5 pressure-level eastward wind, hourly"
+archive = "era5"
+stream = "e5.oper.an.pl"
+layout = "rda_month"
+file_pattern = '128_131_u\.ll025uv\.(?P<key>(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2}))00_'
+ops = ["-selhour,{hours}", "-sellevel,{levels}", "-sellonlatbox,{box}"]
+
+[datasets.era5_v]
+description = "ERA5 pressure-level northward wind, hourly"
+archive = "era5"
+stream = "e5.oper.an.pl"
+layout = "rda_month"
+file_pattern = '128_132_v\.ll025uv\.(?P<key>(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2}))00_'
+ops = ["-selhour,{hours}", "-sellevel,{levels}", "-sellonlatbox,{box}"]
+
+[datasets.era5_q]
+description = "ERA5 pressure-level specific humidity, hourly"
+archive = "era5"
+stream = "e5.oper.an.pl"
+layout = "rda_month"
+file_pattern = '128_133_q\.ll025sc\.(?P<key>(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2}))00_'
+ops = ["-selhour,{hours}", "-sellevel,{levels}", "-sellonlatbox,{box}"]
+
+[datasets.era5_t]
+description = "ERA5 pressure-level temperature, hourly"
+archive = "era5"
+stream = "e5.oper.an.pl"
+layout = "rda_month"
+file_pattern = '128_130_t\.ll025sc\.(?P<key>(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2}))00_'
+ops = ["-selhour,{hours}", "-sellevel,{levels}", "-sellonlatbox,{box}"]
+
+# ---- ERA-20C surface forecast, 3-hourly (RDA d626000) ----
+
+[datasets.era20c_tp]
+description = "ERA-20C total precipitation, daily accumulation at 06Z"
+archive = "era20c"
+stream = "e20c.oper.fc.sfc.3hr"
+layout = "rda_decade"
+file_pattern = '128_228_tp\.regn80sc\.(?P<key>(?P<year>\d{4})0101)'
+ops = ["-selhour,6", "-sellonlatbox,{box}"]
+
+# ---- MESACLIP (CESM-HR ne120) historical, 6-hourly, one file per year (RDA d651007) ----
+# Levels are baked into variable names, so there is no {levels} op; requests list u850 etc.
+
+[datasets.mesaclip_u850]
+description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .004"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.004"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_v850]
+description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .004"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.004"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_u700]
+description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .004"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.004"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_v700]
+description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .004"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.004"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_u500]
+description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .004"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.004"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_v500]
+description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .004"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.004"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ==== GENERATED by gen_mesaclip_entries.go: temporary until requests carry `case` ====
+
+# ---- MESACLIP historical, member .005 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005) ----
+
+[datasets.mesaclip_hist_005_u850]
+description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .005"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_hist_005_v850]
+description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .005"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_hist_005_u700]
+description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .005"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_hist_005_v700]
+description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .005"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_hist_005_u500]
+description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .005"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_hist_005_v500]
+description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .005"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP RCP8.5, member .005 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005) ----
+
+[datasets.mesaclip_rcp_005_u850]
+description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .005"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_rcp_005_v850]
+description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .005"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_rcp_005_u700]
+description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .005"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_rcp_005_v700]
+description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .005"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_rcp_005_u500]
+description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .005"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_rcp_005_v500]
+description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .005"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP historical, member .006 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006) ----
+
+[datasets.mesaclip_hist_006_u850]
+description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .006"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_hist_006_v850]
+description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .006"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_hist_006_u700]
+description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .006"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_hist_006_v700]
+description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .006"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_hist_006_u500]
+description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .006"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_hist_006_v500]
+description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .006"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP RCP8.5, member .006 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006) ----
+
+[datasets.mesaclip_rcp_006_u850]
+description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .006"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_rcp_006_v850]
+description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .006"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_rcp_006_u700]
+description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .006"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_rcp_006_v700]
+description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .006"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_rcp_006_u500]
+description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .006"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_rcp_006_v500]
+description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .006"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP historical, member .007 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007) ----
+
+[datasets.mesaclip_hist_007_u850]
+description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .007"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_hist_007_v850]
+description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .007"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_hist_007_u700]
+description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .007"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_hist_007_v700]
+description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .007"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_hist_007_u500]
+description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .007"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_hist_007_v500]
+description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .007"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP RCP8.5, member .007 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007) ----
+
+[datasets.mesaclip_rcp_007_u850]
+description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .007"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_rcp_007_v850]
+description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .007"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_rcp_007_u700]
+description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .007"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_rcp_007_v700]
+description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .007"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_rcp_007_u500]
+description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .007"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_rcp_007_v500]
+description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .007"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP historical, member .008 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008) ----
+
+[datasets.mesaclip_hist_008_u850]
+description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .008"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_hist_008_v850]
+description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .008"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_hist_008_u700]
+description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .008"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_hist_008_v700]
+description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .008"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_hist_008_u500]
+description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .008"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_hist_008_v500]
+description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .008"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP RCP8.5, member .008 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008) ----
+
+[datasets.mesaclip_rcp_008_u850]
+description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .008"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_rcp_008_v850]
+description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .008"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_rcp_008_u700]
+description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .008"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_rcp_008_v700]
+description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .008"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_rcp_008_u500]
+description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .008"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_rcp_008_v500]
+description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .008"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP historical, member .009 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009) ----
+
+[datasets.mesaclip_hist_009_u850]
+description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .009"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_hist_009_v850]
+description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .009"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_hist_009_u700]
+description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .009"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_hist_009_v700]
+description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .009"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_hist_009_u500]
+description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .009"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_hist_009_v500]
+description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .009"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP RCP8.5, member .009 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009) ----
+
+[datasets.mesaclip_rcp_009_u850]
+description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .009"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_rcp_009_v850]
+description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .009"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_rcp_009_u700]
+description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .009"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_rcp_009_v700]
+description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .009"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_rcp_009_u500]
+description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .009"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_rcp_009_v500]
+description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .009"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP historical, member .010 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010) ----
+
+[datasets.mesaclip_hist_010_u850]
+description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .010"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_hist_010_v850]
+description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .010"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_hist_010_u700]
+description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .010"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_hist_010_v700]
+description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .010"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_hist_010_u500]
+description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .010"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_hist_010_v500]
+description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .010"
+archive = "mesaclip_hist"
+layout = "cesm_case"
+case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# ---- MESACLIP RCP8.5, member .010 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010) ----
+
+[datasets.mesaclip_rcp_010_u850]
+description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .010"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+
+[datasets.mesaclip_rcp_010_v850]
+description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .010"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+
+[datasets.mesaclip_rcp_010_u700]
+description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .010"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+
+[datasets.mesaclip_rcp_010_v700]
+description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .010"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+
+[datasets.mesaclip_rcp_010_u500]
+description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .010"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+
+[datasets.mesaclip_rcp_010_v500]
+description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .010"
+archive = "mesaclip_proj"
+layout = "cesm_case"
+case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+stream = "hour_6"
+file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+       "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+
+# # ==== GENERATED by gen_mesaclip_entries.go: temporary until requests carry `case` ====
+#
+# # ---- MESACLIP historical, member .005 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005) ----
+#
+# [datasets.mesaclip_hist_005_u850]
+# description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .005"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_hist_005_v850]
+# description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .005"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_hist_005_u700]
+# description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .005"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_hist_005_v700]
+# description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .005"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_hist_005_u500]
+# description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .005"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_hist_005_v500]
+# description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .005"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.44-1920-2005.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP RCP8.5, member .005 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005) ----
+#
+# [datasets.mesaclip_rcp_005_u850]
+# description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .005"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_rcp_005_v850]
+# description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .005"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_rcp_005_u700]
+# description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .005"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_rcp_005_v700]
+# description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .005"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_rcp_005_u500]
+# description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .005"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_rcp_005_v500]
+# description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .005"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.44-2006-2100.005"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP historical, member .006 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006) ----
+#
+# [datasets.mesaclip_hist_006_u850]
+# description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .006"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_hist_006_v850]
+# description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .006"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_hist_006_u700]
+# description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .006"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_hist_006_v700]
+# description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .006"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_hist_006_u500]
+# description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .006"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_hist_006_v500]
+# description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .006"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.45-1920-2005.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP RCP8.5, member .006 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006) ----
+#
+# [datasets.mesaclip_rcp_006_u850]
+# description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .006"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_rcp_006_v850]
+# description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .006"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_rcp_006_u700]
+# description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .006"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_rcp_006_v700]
+# description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .006"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_rcp_006_u500]
+# description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .006"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_rcp_006_v500]
+# description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .006"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.006"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP historical, member .007 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007) ----
+#
+# [datasets.mesaclip_hist_007_u850]
+# description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .007"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_hist_007_v850]
+# description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .007"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_hist_007_u700]
+# description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .007"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_hist_007_v700]
+# description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .007"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_hist_007_u500]
+# description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .007"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_hist_007_v500]
+# description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .007"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP RCP8.5, member .007 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007) ----
+#
+# [datasets.mesaclip_rcp_007_u850]
+# description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .007"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_rcp_007_v850]
+# description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .007"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_rcp_007_u700]
+# description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .007"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_rcp_007_v700]
+# description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .007"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_rcp_007_u500]
+# description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .007"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_rcp_007_v500]
+# description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .007"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.007"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP historical, member .008 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008) ----
+#
+# [datasets.mesaclip_hist_008_u850]
+# description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .008"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_hist_008_v850]
+# description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .008"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_hist_008_u700]
+# description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .008"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_hist_008_v700]
+# description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .008"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_hist_008_u500]
+# description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .008"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_hist_008_v500]
+# description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .008"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP RCP8.5, member .008 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008) ----
+#
+# [datasets.mesaclip_rcp_008_u850]
+# description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .008"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_rcp_008_v850]
+# description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .008"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_rcp_008_u700]
+# description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .008"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_rcp_008_v700]
+# description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .008"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_rcp_008_u500]
+# description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .008"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_rcp_008_v500]
+# description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .008"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.008"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP historical, member .009 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009) ----
+#
+# [datasets.mesaclip_hist_009_u850]
+# description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .009"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_hist_009_v850]
+# description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .009"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_hist_009_u700]
+# description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .009"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_hist_009_v700]
+# description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .009"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_hist_009_u500]
+# description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .009"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_hist_009_v500]
+# description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .009"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP RCP8.5, member .009 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009) ----
+#
+# [datasets.mesaclip_rcp_009_u850]
+# description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .009"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_rcp_009_v850]
+# description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .009"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_rcp_009_u700]
+# description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .009"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_rcp_009_v700]
+# description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .009"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_rcp_009_u500]
+# description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .009"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_rcp_009_v500]
+# description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .009"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.009"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP historical, member .010 (b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010) ----
+#
+# [datasets.mesaclip_hist_010_u850]
+# description = "MESACLIP historical 850-hPa eastward wind, 6-hourly, member .010"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_hist_010_v850]
+# description = "MESACLIP historical 850-hPa northward wind, 6-hourly, member .010"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_hist_010_u700]
+# description = "MESACLIP historical 700-hPa eastward wind, 6-hourly, member .010"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_hist_010_v700]
+# description = "MESACLIP historical 700-hPa northward wind, 6-hourly, member .010"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_hist_010_u500]
+# description = "MESACLIP historical 500-hPa eastward wind, 6-hourly, member .010"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_hist_010_v500]
+# description = "MESACLIP historical 500-hPa northward wind, 6-hourly, member .010"
+# archive = "mesaclip_hist"
+# layout = "cesm_case"
+# case = "b.e13.BHISTC5.ne120_t12.cesm-ihesp-hires1.0.46-1920-2005.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
+#
+# # ---- MESACLIP RCP8.5, member .010 (b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010) ----
+#
+# [datasets.mesaclip_rcp_010_u850]
+# description = "MESACLIP RCP8.5 850-hPa eastward wind, 6-hourly, member .010"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U850"]
+#
+# [datasets.mesaclip_rcp_010_v850]
+# description = "MESACLIP RCP8.5 850-hPa northward wind, 6-hourly, member .010"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V850\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V850"]
+#
+# [datasets.mesaclip_rcp_010_u700]
+# description = "MESACLIP RCP8.5 700-hPa eastward wind, 6-hourly, member .010"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U700"]
+#
+# [datasets.mesaclip_rcp_010_v700]
+# description = "MESACLIP RCP8.5 700-hPa northward wind, 6-hourly, member .010"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V700\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V700"]
+#
+# [datasets.mesaclip_rcp_010_u500]
+# description = "MESACLIP RCP8.5 500-hPa eastward wind, 6-hourly, member .010"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.U500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,U500"]
+#
+# [datasets.mesaclip_rcp_010_v500]
+# description = "MESACLIP RCP8.5 500-hPa northward wind, 6-hourly, member .010"
+# archive = "mesaclip_proj"
+# layout = "cesm_case"
+# case = "b.e13.BRCP85C5.ne120_t12.cesm-ihesp-hires1.0.46-2006-2100.010"
+# stream = "hour_6"
+# file_pattern = '\.cam\.h2\.V500\.(?P<key>(?P<year>\d{4})010100)-'
+# ops = ["-selhour,{hours}", "-selmon,11,12,1,2,3", "-sellonlatbox,{box}",
+#        "-setgrid,/glade/work/jackscheffel/regrid/ne120_grid.nc", "-selname,V500"]
